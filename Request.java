@@ -1,5 +1,6 @@
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -10,9 +11,9 @@ public class Request {
     private final String path;
     private final Map<String, String> headers;
     private final InputStream in;
-    private final List<NameValuePair> nameValuePairList;
+    private final Map<String,NameValuePair> nameValuePairList;
 
-    private Request(String method, String path, Map<String, String> headers, InputStream in, List<NameValuePair> nameValuePairList) {
+    private Request(String method, String path, Map<String, String> headers, InputStream in, Map<String,NameValuePair> nameValuePairList) {
         this.method = method;
         this.path = path;
         this.headers = headers;
@@ -38,9 +39,8 @@ public class Request {
 
 
     protected String getQueryParam(String name) {
-        for (NameValuePair nameValuePair : nameValuePairList) {
-            if (nameValuePair.getName().equals(name))
-                return nameValuePair.getValue();
+        if (nameValuePairList.containsKey(name)) {
+            return String.valueOf(nameValuePairList.get(name));
         }
         return null;
     }
